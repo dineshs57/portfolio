@@ -1,0 +1,182 @@
+/*
+ * Tailwind v4 entry: config lives here, with no tailwind.config.js or PostCSS plugin.
+ * Keep every @import in this top block. Web fonts load via <link> in src/routes/__root.tsx.
+ */
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+}
+
+/* Dark-only portfolio: charcoal surfaces, white type, one restrained blue accent. */
+:root {
+  color-scheme: dark;
+  --radius: 0.75rem;
+  --background: oklch(0.165 0.004 265);
+  --surface: oklch(0.19 0.005 265);
+  --surface-raised: oklch(0.215 0.006 265);
+  --foreground: oklch(0.97 0.003 265);
+  --card: oklch(0.19 0.005 265);
+  --card-foreground: oklch(0.97 0.003 265);
+  --popover: oklch(0.2 0.005 265);
+  --popover-foreground: oklch(0.97 0.003 265);
+  --primary: oklch(0.7 0.13 250);
+  --primary-foreground: oklch(0.16 0.01 265);
+  --primary-soft: oklch(0.7 0.13 250 / 12%);
+  --secondary: oklch(0.235 0.006 265);
+  --secondary-foreground: oklch(0.95 0.003 265);
+  --muted: oklch(0.235 0.006 265);
+  --muted-foreground: oklch(0.7 0.01 265);
+  --subtle-foreground: oklch(0.55 0.01 265);
+  --accent: oklch(0.25 0.008 265);
+  --accent-foreground: oklch(0.97 0.003 265);
+  --destructive: oklch(0.65 0.19 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.27 0.006 265);
+  --border-strong: oklch(0.34 0.008 265);
+  --input: oklch(0.3 0.006 265);
+  --ring: oklch(0.7 0.13 250);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background: var(--primary-soft);
+    color: var(--foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal {
+      transform: none !important;
+    }
+  }
+}
+
+/* Faint grid behind the hero; fades out so it never competes with text. */
+@utility hero-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 75%);
+  opacity: 0.45;
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle-foreground);
+}
+
+/* Scroll reveal: slide in from the bottom or sides with a slight 3D tilt, then settle. */
+@utility reveal {
+  --tx: 0px;
+  --ty: 44px;
+  --rx: 7deg;
+  --ry: 0deg;
+  opacity: 0;
+  transform: perspective(1000px) translate3d(var(--tx), var(--ty), 0) rotateX(var(--rx))
+    rotateY(var(--ry));
+  transition:
+    opacity 800ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  &[data-from="left"] {
+    --tx: -72px;
+    --ty: 0px;
+    --rx: 0deg;
+    --ry: 9deg;
+  }
+  &[data-from="right"] {
+    --tx: 72px;
+    --ty: 0px;
+    --rx: 0deg;
+    --ry: -9deg;
+  }
+  @media (max-width: 767px) {
+    &[data-from="left"] {
+      --tx: -28px;
+    }
+    &[data-from="right"] {
+      --tx: 28px;
+    }
+  }
+  &[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
